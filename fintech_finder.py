@@ -33,7 +33,6 @@ w3 = Web3(Web3.HTTPProvider('HTTP://127.0.0.1:7545'))
 ################################################################################
 # Step 1:
 # Import Ethereum Transaction Functions into the Fintech Finder Application
-
 # In this section, you'll import several functions from the `crypto_wallet.py`
 # script into the file `fintech_finder.py`, which contains code for Fintech
 # Finder’s customer interface, in order to add wallet operations to the
@@ -80,6 +79,9 @@ w3 = Web3(Web3.HTTPProvider('HTTP://127.0.0.1:7545'))
 # From `crypto_wallet.py import the functions generate_account, get_balance,
 #  and send_transaction
 # YOUR CODE HERE
+
+from crypto_wallet import generate_account, get_balance, send_transaction
+    
 
 ################################################################################
 # Fintech Finder Candidate Information
@@ -134,6 +136,8 @@ st.sidebar.markdown("## Client Account Address and Ethernet Balance in Ether")
 
 ##########################################
 
+account = generate_account()
+
 # Write the client's Ethereum account address to the sidebar
 st.sidebar.write(account.address)
 
@@ -149,6 +153,10 @@ st.sidebar.write(account.address)
 # YOUR CODE HERE
 
 ##########################################
+
+st.sidebar.write("## Your Account Balance is: ")
+st.sidebar.write(get_balance(w3, account.address))
+
 
 # Create a select box to chose a FinTech Hire candidate
 person = st.sidebar.selectbox('Select a Person', people)
@@ -243,6 +251,9 @@ st.sidebar.markdown("## Total Wage in Ether")
 # Write the `wage` calculation to the Streamlit sidebar
 # YOUR CODE HERE
 
+wage = hourly_rate * hours
+st.sidebar.write("The wage is ", wage)
+
 ##########################################
 # Step 2 - Part 2:
 # * Call the `send_transaction` function and pass it three parameters:
@@ -269,7 +280,7 @@ if st.sidebar.button("Send Transaction"):
     # Your `account`, the `candidate_address`, and the `wage` as parameters
     # Save the returned transaction hash as a variable named `transaction_hash`
     # YOUR CODE HERE
-
+    transaction_hash = send_transaction(w3, account, candidate_address, wage)
     # Markdown for the transaction hash
     st.sidebar.markdown("#### Validated Transaction Hash")
 
@@ -281,7 +292,7 @@ if st.sidebar.button("Send Transaction"):
 
 # The function that starts the Streamlit application
 # Writes FinTech Finder candidates to the Streamlit page
-get_people()
+get_people(w3)
 
 ################################################################################
 # Step 3: Inspect the Transaction
